@@ -1,16 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Task from "./task/Task";
+import axios from "axios";
 
 const Tasks = () => {
-    const tasksList=[
-        {title: 'Heading 1', description: 'description 1'},
-        {title: 'Heading 2', description: 'description 2'},
-        {title: 'Heading 3', description: 'description 3'},
-    ];
+  const [tasksList, setTasksList] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/tasks/")
+      .then((list) => {
+        setTasksList(list.data);
+      })
+      .catch((err) => {
+        console.log("Err");
+        console.log(err);
+      });
+  }, []);
+
   return (
     <>
-      <div style={{display: 'flex', flexWrap: 'wrap'}}>
-        {tasksList.map((x,index)=><Task title={x.title} description={x.description} key={index}/>)}
+      <div style={{ display: "flex", flexWrap: "wrap" }}>
+        {tasksList.length > 0 &&
+          tasksList.map((x, index) => (
+            <Task title={x.title} description={x.description} key={index} />
+          ))}
       </div>
     </>
   );
