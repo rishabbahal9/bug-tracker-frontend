@@ -37,21 +37,13 @@ const AddModal = (props) => {
   };
   const handleSubmit = () => {
     // Make axios request
-    axios.post(
-      process.env.REACT_APP_BACKEND_LINK + "/tasks/",
-      {
-        title: title,
-        description: description,
-        priority: priority,
-        done: false,
-        user: 1,
-      },
-      {
-        headers: {
-          Authorization: `token ${localStorage.getItem("auth_token")}`,
-        },
-      }
-    );
+    axios.post(process.env.REACT_APP_BACKEND_LINK + "/tasks/", {
+      title: title,
+      description: description,
+      priority: priority,
+      done: false,
+      user: 1,
+    });
     props.handleClose();
   };
   return (

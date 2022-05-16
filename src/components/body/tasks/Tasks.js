@@ -11,11 +11,7 @@ const Tasks = () => {
 
   useEffect(() => {
     axios
-      .get(process.env.REACT_APP_BACKEND_LINK + "/tasks/", {
-        headers: {
-          Authorization: `token ${localStorage.getItem("auth_token")}`,
-        },
-      })
+      .get(process.env.REACT_APP_BACKEND_LINK + "/tasks/")
       .then((list) => {
         setTasksList(list.data);
       })
