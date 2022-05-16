@@ -34,15 +34,22 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn() {
-  const [showError, setShowError] = React.useState({show: false, msg: ''});
+  const [showError, setShowError] = React.useState({ show: false, msg: "" });
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    // Validating
+    // Validating email
+    if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(data.get("email"))) {
+      setShowError({ show: true, msg: "Invalid email address" });
+      return;
+    }
+    // Validating password
+    if (data.get("password").length === 0) {
+      setShowError({ show: true, msg: "Enter password." });
+      return;
+    }
     // Send axios request to backend
     axios
       .post(process.env.REACT_APP_BACKEND_LINK + "/auth/token/login/", {
@@ -50,16 +57,14 @@ export default function SignIn() {
         password: data.get("password"),
       })
       .then((response) => {
-        console.log(response);
-        console.log(response.data.auth_token);
         // Save in localstorage
         localStorage.setItem("auth_token", response.data.auth_token);
+        // Remove if there is error message
+        setShowError({ show: false, msg: "" });
         // Update app state
       })
       .catch((error) => {
-        console.log(error);
-        // Show error message
-        setShowError({show: true, msg: 'Error: Invalid credentials.'})
+        setShowError({ show: true, msg: "Error: Invalid credentials." });
       });
   };
 
@@ -107,10 +112,8 @@ export default function SignIn() {
               id="password"
               autoComplete="current-password"
             />
-            
-            {showError.show && (
-              <AuthErrorMessage message={showError.msg} />
-            )}
+            <br />
+            {showError.show && <AuthErrorMessage message={showError.msg} />}
             <Button
               type="submit"
               fullWidth
