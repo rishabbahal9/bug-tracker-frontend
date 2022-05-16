@@ -8,7 +8,7 @@ const Tasks = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/tasks/", {
+      .get(process.env.REACT_APP_BACKEND_LINK + "/tasks/", {
         headers: {
           Authorization: `token ${localStorage.getItem("auth_token")}`,
         },
