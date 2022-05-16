@@ -12,6 +12,8 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import AuthErrorMessage from "./AuthErrorMessage";
+import { useDispatch } from "react-redux";
+import { authenticationAction } from "../../../store/auth";
 
 function Copyright(props) {
   return (
@@ -33,7 +35,8 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function SignIn() {
+const SignIn = (props) => {
+  const dispatch = useDispatch();
   const [showError, setShowError] = React.useState({ show: false, msg: "" });
 
   const handleSubmit = (event) => {
@@ -62,8 +65,10 @@ export default function SignIn() {
         // Remove if there is error message
         setShowError({ show: false, msg: "" });
         // Update app state
+        dispatch(authenticationAction.login());
       })
       .catch((error) => {
+        console.log(error);
         setShowError({ show: true, msg: "Error: Invalid credentials." });
       });
   };
@@ -140,4 +145,5 @@ export default function SignIn() {
       </Container>
     </ThemeProvider>
   );
-}
+};
+export default SignIn;
