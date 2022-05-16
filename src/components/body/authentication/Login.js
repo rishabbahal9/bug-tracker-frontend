@@ -3,8 +3,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -12,6 +10,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import axios from "axios";
+import AuthErrorMessage from "./AuthErrorMessage";
 
 function Copyright(props) {
   return (
@@ -34,6 +34,8 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn() {
+  const [showError, setShowError] = React.useState({show: false, msg: ''});
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -41,6 +43,24 @@ export default function SignIn() {
       email: data.get("email"),
       password: data.get("password"),
     });
+    // Send axios request to backend
+    axios
+      .post(process.env.REACT_APP_BACKEND_LINK + "/auth/token/login/", {
+        email: data.get("email"),
+        password: data.get("password"),
+      })
+      .then((response) => {
+        console.log(response);
+        console.log(response.data.auth_token);
+        // Save in localstorage
+        localStorage.setItem("auth_token", response.data.auth_token);
+        // Update app state
+      })
+      .catch((error) => {
+        console.log(error);
+        // Show error message
+        setShowError({show: true, msg: 'Error: Invalid credentials.'})
+      });
   };
 
   return (
@@ -87,10 +107,10 @@ export default function SignIn() {
               id="password"
               autoComplete="current-password"
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+            
+            {showError.show && (
+              <AuthErrorMessage message={showError.msg} />
+            )}
             <Button
               type="submit"
               fullWidth
