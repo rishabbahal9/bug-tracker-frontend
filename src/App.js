@@ -9,28 +9,27 @@ import Header from "./components/header/Header";
 import SignIn from "./components/body/authentication/Login";
 import SignUp from "./components/body/authentication/Signup";
 import ResetPassword from "./components/body/authentication/ResetPassword";
-import store from "./store/index";
-import { Provider } from "react-redux";
+import { useSelector } from "react-redux";
+import Tasks from "./components/body/tasks/Tasks";
 
 function App() {
   // const store = createStore(rootReducer);
+  const isAuth = useSelector((state) => state.auth.isAuthenticated);
   return (
-    <Provider store={store}>
+    <div className="App">
+      <Header />
+      {/* <Tasks/> */}
       <div className="App">
-        <Header />
-        {/* <Tasks/> */}
-        <div className="App">
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<SignIn />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              {/* <Route path="*" element={<PageNotFound />} /> */}
-            </Routes>
-          </BrowserRouter>
-        </div>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={!isAuth ? <SignIn /> : <Tasks />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            {/* <Route path="*" element={<PageNotFound />} /> */}
+          </Routes>
+        </BrowserRouter>
       </div>
-    </Provider>
+    </div>
   );
 }
 

@@ -8,7 +8,11 @@ const Tasks = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/tasks/")
+      .get("http://localhost:8000/tasks/", {
+        headers: {
+          Authorization: `token ${localStorage.getItem("auth_token")}`,
+        },
+      })
       .then((list) => {
         setTasksList(list.data);
       })
@@ -19,10 +23,17 @@ const Tasks = () => {
   }, []);
 
   return (
-    <div id="flex-container" >
+    <div id="flex-container">
       {tasksList.length > 0 &&
         tasksList.map((x, index) => (
-          <Task title={x.title} description={x.description} done={x.done} priority={x.priority} user={x.user} key={index} />
+          <Task
+            title={x.title}
+            description={x.description}
+            done={x.done}
+            priority={x.priority}
+            user={x.user}
+            key={index}
+          />
         ))}
     </div>
   );
