@@ -25,7 +25,6 @@ const Header = () => {
     {
       label: "Logout",
       method: () => {
-        console.log("Logout works");
         setAnchorElUser(null);
         dispatch(authenticationAction.logout());
       },

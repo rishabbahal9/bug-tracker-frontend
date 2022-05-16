@@ -18,8 +18,6 @@ function App() {
   React.useEffect(() => {
     if (localStorage.getItem("auth_token")) {
       dispatch(authenticationAction.login());
-    } else {
-      console.log("Token not detected");
     }
   }, []);
   // const store = createStore(rootReducer);
