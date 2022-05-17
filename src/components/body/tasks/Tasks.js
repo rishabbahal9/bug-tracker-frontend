@@ -3,7 +3,6 @@ import axios from "axios";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 import Task from "./task/Task";
-import "./Tasks.css";
 import AddModal from "./modals/AddModal";
 
 const Tasks = () => {
@@ -40,17 +39,20 @@ const Tasks = () => {
       </div>
       <br />
       <AddModal handleClose={handleClose} open={open} />
-      {tasksList.length > 0 &&
-        tasksList.map((x, index) => (
-          <Task
-            title={x.title}
-            description={x.description}
-            done={x.done}
-            priority={x.priority}
-            user={x.user}
-            key={index}
-          />
-        ))}
+      <div style={{ maxWidth: "500px", display: "block", margin: "auto" }}>
+        {tasksList.length > 0 &&
+          tasksList.map((x, index) => (
+            <Task
+              id={x.id}
+              title={x.title}
+              description={x.description}
+              done={x.done}
+              priority={x.priority}
+              user={x.user}
+              key={index}
+            />
+          ))}
+      </div>
     </div>
   );
 };

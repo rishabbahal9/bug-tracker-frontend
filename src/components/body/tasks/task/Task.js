@@ -1,45 +1,93 @@
 import React from "react";
-import "./Task.css";
 
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 
-const Task = (props) => {
-  return (
-    <Card sx={{ minWidth: 275 }} id="card">
-      <CardContent>
-        <Typography variant="h5" component="div">
-          {props.title}
-        </Typography>
-        <Typography sx={{ mb: 1.5 }} color="text.secondary">
-          Sub heading
-        </Typography>
-        <Typography variant="body2">
-          well meaning and kindly.
-          <br />
-          {'"a benevolent smile"'}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <IconButton aria-label="share">
-          {props.done ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
-        </IconButton>
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import axios from "axios";
+import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
+import LowPriorityIcon from "@mui/icons-material/LowPriority";
 
-        <Button size="small">Learn More</Button>
-      </CardActions>
-    </Card>
+const Task = (props) => {
+  const onDelete = () => {
+    axios
+      .delete(process.env.REACT_APP_BACKEND_LINK + "/tasks/" + props.id + "/")
+      .then((response) => {
+        console.log("response");
+        console.log(response);
+      })
+      .catch((err) => {
+        console.log("err");
+        console.log(err);
+      });
+  };
+  const onDone = () => {
+    axios
+      .patch(process.env.REACT_APP_BACKEND_LINK + "/tasks/" + props.id + "/", {
+        done: !props.done,
+      })
+      .then((response) => {
+        console.log("response");
+        console.log(response);
+      })
+      .catch((err) => {
+        console.log("err");
+        console.log(err);
+      });
+  };
+  const [expanded, setExpanded] = React.useState(false);
+
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+
+  return (
+    <Accordion
+      expanded={expanded === "panel1"}
+      onChange={handleChange("panel1")}
+    >
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="panel1bh-content"
+        id="panel1bh-header"
+      >
+        {/* <Typography sx={{ width: "80%", flexShrink: 0, textAlign: "left" }}> */}
+        <div>
+          <IconButton aria-label="share" style={{ zIndex: "+10" }}>
+            {props.done ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
+          </IconButton>
+          {props.title}
+          {props.priority === 2 ? (
+            <LowPriorityIcon style={{ margin: "10px" }} />
+          ) : props.priority === 1 ? (
+            <PriorityHighIcon style={{ color: "red" }} />
+          ) : (
+            <div></div>
+          )}
+        </div>
+      </AccordionSummary>
+      <AccordionDetails style={{ textAlign: "left" }}>
+        <Typography color="text.secondary">{props.description}</Typography>
+        <br />
+        <br />
+        <ButtonGroup
+          variant="contained"
+          aria-label="outlined primary button group"
+        >
+          <Button>Edit</Button>
+          <Button onClick={onDone}>Done</Button>
+          <Button onClick={onDelete}>Delete</Button>
+        </ButtonGroup>
+      </AccordionDetails>
+    </Accordion>
   );
-  // return <div className="box-container" style={{backgroundColor: props.priority==1?'#ff8b87':props.priority==2?'#fffdb0':'#fff'}}>
-  //     {props.done?<strike><h3>{props.title}</h3></strike>:<h3>{props.title}</h3>}
-  //     {props.done?<p className="description"><strike>{props.description}</strike></p>:<p className="description">{props.description}</p>}
-  //     <button>Done</button>
-  // </div>;
 };
 
 export default Task;
