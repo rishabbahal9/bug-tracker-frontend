@@ -54,7 +54,9 @@ const SignIn = (props) => {
       return;
     }
     // Send axios request to backend
-    axios
+    const uninterceptedAxiosInstance = axios.create();
+
+    uninterceptedAxiosInstance
       .post(process.env.REACT_APP_BACKEND_LINK + "/auth/token/login/", {
         email: data.get("email"),
         password: data.get("password"),
